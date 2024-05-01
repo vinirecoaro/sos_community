@@ -5,6 +5,7 @@ class Claim {
   String pictureLink;
   String title;
   DateTime date;
+  String status;
 
   Claim(
       {required this.lat,
@@ -12,5 +13,6 @@ class Claim {
       required this.description,
       required this.pictureLink,
       required this.title,
-      required this.date});
+      required this.date,
+      this.status = "Em análise"});
 }

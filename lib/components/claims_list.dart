@@ -10,7 +10,7 @@ class ClaimsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 150,
+      height: 500,
       child: ListView.builder(
         itemCount: claimList.length,
         itemBuilder: (context, index) {
