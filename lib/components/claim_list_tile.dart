@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sos_community/models/claim.dart';
-import 'package:sos_community/screens/add_clain_screen.dart';
 
 class ClaimListTile extends StatelessWidget {
   const ClaimListTile(this.claim, {super.key});

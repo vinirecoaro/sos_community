@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sos_community/components/input_field.dart';
+import 'package:sos_community/components/input_field_large.dart';
 
 class AddClaimScreen extends StatefulWidget {
   const AddClaimScreen({super.key});
@@ -19,6 +20,9 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
         children: [
           InputField(
             label: "Título",
+          ),
+          InputFieldLarge(
+            label: "Descrição",
           ),
           InputField(
             label: "CEP",
