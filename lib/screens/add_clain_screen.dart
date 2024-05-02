@@ -16,20 +16,24 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
       appBar: AppBar(
         title: const Text('Adicionar Reclamação'),
       ),
-      body: const Column(
+      body: Column(
         children: [
-          InputField(
+          const InputField(
             label: "Título",
           ),
           InputFieldLarge(
             label: "Descrição",
           ),
-          InputField(
+          const InputField(
             label: "CEP",
           ),
-          InputField(
+          const InputField(
             label: "Número",
           ),
+          const FilledButton(
+            onPressed: null,
+            child: Text("Enviar"),
+          )
         ],
       ),
     );
