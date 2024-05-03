@@ -11,7 +11,10 @@ class ClaimListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     DateFormat formatter = DateFormat('dd/MM/yyyy');
     return ListTile(
-      onTap: () {},
+      onTap: () {
+        claim.edit = true;
+        Navigator.pushNamed(context, 'add_claim_screen', arguments: claim);
+      },
       title: Text(claim.title),
       subtitle: Text(formatter.format(claim.date)),
       trailing: Text(claim.status),

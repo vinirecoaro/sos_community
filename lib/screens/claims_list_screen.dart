@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sos_community/components/claims_list.dart';
 import 'package:sos_community/models/claim.dart';
-import 'package:sos_community/screens/add_clain_screen.dart';
+import 'package:sos_community/screens/add_claim_screen.dart';
 
 class ClaimsListScreen extends StatefulWidget {
   const ClaimsListScreen({super.key});

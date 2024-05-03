@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sos_community/screens/add_claim_screen.dart';
 import 'package:sos_community/screens/claims_list_screen.dart';
 
 void main() {
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const ClaimsListScreen(),
+      routes: {"add_claim_screen": (context) => const AddClaimScreen()},
     );
   }
 }
