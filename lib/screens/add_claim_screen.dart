@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sos_community/components/input_field.dart';
 import 'package:sos_community/components/input_field_large.dart';
+import 'package:sos_community/components/photo_upload_container.dart';
 import 'package:sos_community/models/claim.dart';
 
 class AddClaimScreen extends StatefulWidget {
@@ -11,6 +12,8 @@ class AddClaimScreen extends StatefulWidget {
 }
 
 class _AddClaimScreenState extends State<AddClaimScreen> {
+  bool isChecked = true;
+
   @override
   Widget build(BuildContext context) {
     bool view;
@@ -26,28 +29,70 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
         ],
       ),
       body: !view
-          ? const SingleChildScrollView(
-              child: Column(
-                children: [
-                  InputField(
-                    label: "Título",
+          ? (isChecked
+              ? SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const InputField(
+                        label: "Título",
+                      ),
+                      const InputFieldLarge(
+                        label: "Descrição",
+                      ),
+                      PhotoUploadContainer(),
+                      Row(
+                        children: [
+                          Checkbox(
+                              value: isChecked,
+                              onChanged: (value) {
+                                setState(() {
+                                  isChecked = value!;
+                                });
+                              }),
+                          const Text("Usar minha localização")
+                        ],
+                      ),
+                      const FilledButton(
+                        onPressed: null,
+                        child: Text("Enviar"),
+                      )
+                    ],
                   ),
-                  InputFieldLarge(
-                    label: "Descrição",
+                )
+              : SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const InputField(
+                        label: "Título",
+                      ),
+                      const InputFieldLarge(
+                        label: "Descrição",
+                      ),
+                      Row(
+                        children: [
+                          Checkbox(
+                              value: isChecked,
+                              onChanged: (value) {
+                                setState(() {
+                                  isChecked = value!;
+                                });
+                              }),
+                          const Text("Usar minha localização")
+                        ],
+                      ),
+                      const InputField(
+                        label: "CEP",
+                      ),
+                      const InputField(
+                        label: "Número",
+                      ),
+                      const FilledButton(
+                        onPressed: null,
+                        child: Text("Enviar"),
+                      )
+                    ],
                   ),
-                  InputField(
-                    label: "CEP",
-                  ),
-                  InputField(
-                    label: "Número",
-                  ),
-                  FilledButton(
-                    onPressed: null,
-                    child: Text("Enviar"),
-                  )
-                ],
-              ),
-            )
+                ))
           : SingleChildScrollView(
               child: Column(
                 children: [
