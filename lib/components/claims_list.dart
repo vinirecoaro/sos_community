@@ -9,15 +9,12 @@ class ClaimsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 500,
-      child: ListView.builder(
-        itemCount: claimList.length,
-        itemBuilder: (context, index) {
-          Claim claim = claimList[index];
-          return ClaimListTile(claim);
-        },
-      ),
+    return ListView.builder(
+      itemCount: claimList.length,
+      itemBuilder: (context, index) {
+        Claim claim = claimList[index];
+        return ClaimListTile(claim);
+      },
     );
   }
 }

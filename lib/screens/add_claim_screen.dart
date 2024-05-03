@@ -25,27 +25,53 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
           if (view) IconButton(onPressed: () {}, icon: const Icon(Icons.delete))
         ],
       ),
-      body: Column(
-        children: [
-          const InputField(
-            label: "Título",
-          ),
-          InputFieldLarge(
-            label: "Descrição",
-          ),
-          const InputField(
-            label: "CEP",
-          ),
-          const InputField(
-            label: "Número",
-          ),
-          if (!view)
-            const FilledButton(
-              onPressed: null,
-              child: Text("Enviar"),
+      body: !view
+          ? const SingleChildScrollView(
+              child: Column(
+                children: [
+                  InputField(
+                    label: "Título",
+                  ),
+                  InputFieldLarge(
+                    label: "Descrição",
+                  ),
+                  InputField(
+                    label: "CEP",
+                  ),
+                  InputField(
+                    label: "Número",
+                  ),
+                  FilledButton(
+                    onPressed: null,
+                    child: Text("Enviar"),
+                  )
+                ],
+              ),
             )
-        ],
-      ),
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  InputField(
+                    label: "Título",
+                    enabled: false,
+                    initialText: claim.title,
+                  ),
+                  InputFieldLarge(
+                    label: "Descrição",
+                    enabled: false,
+                    initialText: claim.description,
+                  ),
+                  const InputField(
+                    label: "CEP",
+                    enabled: false,
+                  ),
+                  const InputField(
+                    label: "Número",
+                    enabled: false,
+                  ),
+                ],
+              ),
+            ),
     );
   }
 }

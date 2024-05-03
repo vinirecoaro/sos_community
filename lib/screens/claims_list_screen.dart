@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sos_community/components/claims_list.dart';
 import 'package:sos_community/models/claim.dart';
-import 'package:sos_community/screens/add_claim_screen.dart';
 
 class ClaimsListScreen extends StatefulWidget {
   const ClaimsListScreen({super.key});
@@ -66,15 +65,19 @@ class _ClaimsListScreenState extends State<ClaimsListScreen> {
         title: const Text("Lista de Reclamações"),
         backgroundColor: const Color.fromARGB(255, 11, 109, 60),
       ),
-      body: Center(
-        child: Column(
-          children: [ClaimsList(claimList)],
-        ),
+      body: Column(
+        children: [Expanded(child: ClaimsList(claimList))],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddClaimScreen()));
+          Navigator.pushNamed(context, "add_claim_screen",
+              arguments: Claim(
+                  lat: 0,
+                  lon: 0,
+                  description: "",
+                  pictureLink: "",
+                  title: "",
+                  date: DateTime(2024)));
         },
         child: const Icon(Icons.add),
       ),

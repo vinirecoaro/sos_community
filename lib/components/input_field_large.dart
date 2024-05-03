@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 
 class InputFieldLarge extends StatefulWidget {
-  InputFieldLarge({super.key, this.label = "label name", this.maxLenght = 500});
+  const InputFieldLarge(
+      {super.key,
+      this.label = "label name",
+      this.maxLenght = 500,
+      this.enabled = true,
+      this.initialText = ''});
 
   final String label;
   final int maxLenght;
+  final bool enabled;
+  final String initialText;
 
   @override
   State<InputFieldLarge> createState() => _InputFieldLargeState();
@@ -26,6 +33,8 @@ class _InputFieldLargeState extends State<InputFieldLarge> {
             charCount = value.length;
           })
         },
+        enabled: widget.enabled,
+        initialValue: widget.initialText,
         decoration: InputDecoration(
           counter: Text("$charCount/${widget.maxLenght}"),
           alignLabelWithHint: true,
