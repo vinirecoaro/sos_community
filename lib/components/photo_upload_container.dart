@@ -10,11 +10,11 @@ class PhotoUploadContainer extends StatefulWidget {
 }
 
 class _PhotoUploadContainerState extends State<PhotoUploadContainer> {
-  List<File?> _images = [];
+  final List<File?> _images = [];
 
   Future<void> _getImage(ImageSource source) async {
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: source);
+    final pickedFile = await picker.pickImage(source: source);
 
     if (pickedFile != null) {
       setState(() {
@@ -27,6 +27,12 @@ class _PhotoUploadContainerState extends State<PhotoUploadContainer> {
     }
   }
 
+  void _removeImage(int index) {
+    setState(() {
+      _images.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -35,7 +41,12 @@ class _PhotoUploadContainerState extends State<PhotoUploadContainer> {
         crossAxisCount: 3,
         children: List.generate(3, (index) {
           if (index < _images.length) {
-            return Image.file(_images[index]!);
+            return GestureDetector(
+              onTap: () {
+                _showImageOptions(index);
+              },
+              child: Image.file(_images[index]!),
+            );
           } else {
             return IconButton(
               icon: const Icon(Icons.camera_alt),
@@ -69,6 +80,28 @@ class _PhotoUploadContainerState extends State<PhotoUploadContainer> {
                 title: const Text('Camera'),
                 onTap: () {
                   _getImage(ImageSource.camera);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showImageOptions(int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.delete),
+                title: const Text('Excluir'),
+                onTap: () {
+                  _removeImage(index);
                   Navigator.of(context).pop();
                 },
               ),
