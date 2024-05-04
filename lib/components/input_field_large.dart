@@ -6,12 +6,14 @@ class InputFieldLarge extends StatefulWidget {
       this.label = "label name",
       this.maxLenght = 500,
       this.enabled = true,
-      this.initialText = ''});
+      this.initialText = '',
+      this.controller});
 
   final String label;
   final int maxLenght;
   final bool enabled;
   final String initialText;
+  final TextEditingController? controller;
 
   @override
   State<InputFieldLarge> createState() => _InputFieldLargeState();

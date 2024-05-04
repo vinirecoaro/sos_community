@@ -5,11 +5,13 @@ class InputField extends StatelessWidget {
       {super.key,
       this.label = "label name",
       this.enabled = true,
-      this.initialText = ''});
+      this.initialText = '',
+      this.controller});
 
   final String label;
   final bool enabled;
   final String initialText;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +20,7 @@ class InputField extends StatelessWidget {
       child: TextFormField(
         initialValue: initialText,
         enabled: enabled,
+        controller: controller,
         decoration: InputDecoration(
           label: Text(label),
           enabled: false,

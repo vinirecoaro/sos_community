@@ -32,16 +32,16 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              const InputField(
-                label: "Título",
-              ),
-              const InputFieldLarge(
-                label: "Descrição",
-              ),
-              const PhotoUploadContainer(),
               if (!view)
                 Column(
                   children: [
+                    const InputField(
+                      label: "Título",
+                    ),
+                    const InputFieldLarge(
+                      label: "Descrição",
+                    ),
+                    const PhotoUploadContainer(),
                     Row(
                       children: [
                         Checkbox(
@@ -71,6 +71,22 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                     ),
                   ],
                 ),
+              if (view)
+                Column(
+                  children: [
+                    InputField(
+                      label: "Título",
+                      enabled: false,
+                      initialText: claim.title,
+                    ),
+                    InputFieldLarge(
+                      label: "Descrição",
+                      enabled: false,
+                      initialText: claim.description,
+                    ),
+                    const PhotoUploadContainer(),
+                  ],
+                )
             ],
           ),
         ));
