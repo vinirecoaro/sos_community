@@ -18,6 +18,10 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
   Widget build(BuildContext context) {
     bool view;
     final Claim claim = ModalRoute.of(context)!.settings.arguments as Claim;
+    final TextEditingController titleController = TextEditingController();
+    final TextEditingController descriptionController = TextEditingController();
+    final TextEditingController cepController = TextEditingController();
+    final TextEditingController numController = TextEditingController();
 
     view = claim.edit;
 
@@ -35,11 +39,13 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
               if (!view)
                 Column(
                   children: [
-                    const InputField(
+                    InputField(
                       label: "Título",
+                      controller: titleController,
                     ),
-                    const InputFieldLarge(
+                    InputFieldLarge(
                       label: "Descrição",
+                      controller: descriptionController,
                     ),
                     const PhotoUploadContainer(),
                     Row(
@@ -55,19 +61,24 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                       ],
                     ),
                     if (!isChecked)
-                      const Column(
+                      Column(
                         children: [
                           InputField(
                             label: "CEP",
+                            controller: cepController,
                           ),
                           InputField(
                             label: "Número",
+                            controller: numController,
                           ),
                         ],
                       ),
-                    const FilledButton(
-                      onPressed: null,
-                      child: Text("Enviar"),
+                    FilledButton(
+                      onPressed: () {
+                        print(
+                            "${titleController.text}, ${descriptionController.text}, ${cepController.text}, ${numController.text}");
+                      },
+                      child: const Text("Enviar"),
                     ),
                   ],
                 ),
