@@ -25,6 +25,11 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
 
     view = claim.edit;
 
+    if (view) {
+      titleController.text = claim.title;
+      descriptionController.text = claim.description;
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Adicionar Reclamação'),
@@ -88,12 +93,12 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                     InputField(
                       label: "Título",
                       enabled: false,
-                      initialText: claim.title,
+                      controller: titleController,
                     ),
                     InputFieldLarge(
                       label: "Descrição",
                       enabled: false,
-                      initialText: claim.description,
+                      controller: descriptionController,
                     ),
                     const PhotoUploadContainer(),
                   ],
