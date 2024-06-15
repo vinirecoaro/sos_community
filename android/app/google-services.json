@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "19406723565",
+    "firebase_url": "https://sos-community-app-default-rtdb.firebaseio.com",
+    "project_id": "sos-community-app",
+    "storage_bucket": "sos-community-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:19406723565:android:258511218f5ddf70f4afe4",
+        "android_client_info": {
+          "package_name": "com.example.sos_community"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8ygJbh_AZdnA412nGJinHkEOPJuO1lW4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
