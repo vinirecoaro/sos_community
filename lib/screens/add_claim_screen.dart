@@ -3,6 +3,7 @@ import 'package:sos_community/components/input_field.dart';
 import 'package:sos_community/components/input_field_large.dart';
 import 'package:sos_community/components/photo_upload_container.dart';
 import 'package:sos_community/models/claim.dart';
+import 'package:sos_community/service/location_service.dart';
 
 class AddClaimScreen extends StatefulWidget {
   const AddClaimScreen({super.key});
@@ -13,17 +14,18 @@ class AddClaimScreen extends StatefulWidget {
 
 class _AddClaimScreenState extends State<AddClaimScreen> {
   bool isChecked = true;
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController cepController = TextEditingController();
+  final TextEditingController numController = TextEditingController();
+  final TextEditingController latController = TextEditingController();
+  final TextEditingController lonController = TextEditingController();
+  bool buttonEnabled = false;
 
   @override
   Widget build(BuildContext context) {
     bool view;
     final Claim claim = ModalRoute.of(context)!.settings.arguments as Claim;
-    final TextEditingController titleController = TextEditingController();
-    final TextEditingController descriptionController = TextEditingController();
-    final TextEditingController cepController = TextEditingController();
-    final TextEditingController numController = TextEditingController();
-    final TextEditingController latController = TextEditingController();
-    final TextEditingController lonController = TextEditingController();
 
     view = claim.edit;
 
@@ -38,6 +40,26 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
         latController.text = claim.lat.toString();
         lonController.text = claim.lon.toString();
       }
+    }
+
+    if (!view && isChecked) {
+      if (latController.text.isEmpty || lonController.text.isEmpty) {
+        LocationService.determinePosition().then((value) {
+          latController.text = value.latitude.toString();
+          lonController.text = value.longitude.toString();
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Buscando localização")));
+          setState(() {
+            buttonEnabled = true;
+          });
+        });
+      }
+    }
+
+    if (!isChecked) {
+      setState(() {
+        buttonEnabled = true;
+      });
     }
 
     return Scaffold(
@@ -89,10 +111,29 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                         ],
                       ),
                     FilledButton(
-                      onPressed: () {
-                        print(
-                            "${titleController.text}, ${descriptionController.text}, ${cepController.text}, ${numController.text}");
-                      },
+                      onPressed: buttonEnabled
+                          ? () {
+                              if (isChecked) {
+                                if (titleController.text.isEmpty ||
+                                    descriptionController.text.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              "Preencher todos os campos")));
+                                } else {}
+                              } else {
+                                if (titleController.text.isEmpty ||
+                                    descriptionController.text.isEmpty ||
+                                    cepController.text.isEmpty ||
+                                    numController.text.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              "Preencher todos os campos")));
+                                } else {}
+                              }
+                            }
+                          : null,
                       child: const Text("Enviar"),
                     ),
                   ],
