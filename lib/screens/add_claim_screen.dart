@@ -22,12 +22,22 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
     final TextEditingController descriptionController = TextEditingController();
     final TextEditingController cepController = TextEditingController();
     final TextEditingController numController = TextEditingController();
+    final TextEditingController latController = TextEditingController();
+    final TextEditingController lonController = TextEditingController();
 
     view = claim.edit;
 
     if (view) {
       titleController.text = claim.title;
       descriptionController.text = claim.description;
+      if (claim.lat == null) {
+        isChecked = false;
+        cepController.text = claim.cep.toString();
+        numController.text = claim.num.toString();
+      } else {
+        latController.text = claim.lat.toString();
+        lonController.text = claim.lon.toString();
+      }
     }
 
     return Scaffold(
@@ -101,6 +111,36 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                       controller: descriptionController,
                     ),
                     const PhotoUploadContainer(),
+                    if (!isChecked)
+                      Column(
+                        children: [
+                          InputField(
+                            label: "CEP",
+                            enabled: false,
+                            controller: cepController,
+                          ),
+                          InputField(
+                            label: "Número",
+                            enabled: false,
+                            controller: numController,
+                          ),
+                        ],
+                      ),
+                    if (isChecked)
+                      Column(
+                        children: [
+                          InputField(
+                            label: "Latidude",
+                            enabled: false,
+                            controller: latController,
+                          ),
+                          InputField(
+                            label: "Longitude",
+                            enabled: false,
+                            controller: lonController,
+                          ),
+                        ],
+                      )
                   ],
                 )
             ],

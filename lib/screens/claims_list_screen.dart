@@ -12,13 +12,12 @@ class ClaimsListScreen extends StatefulWidget {
 List<Claim> claimList = [
   // Objeto 1
   Claim(
-    lat: -23.5505,
-    lon: -46.6333,
-    description: "Buraco na rua principal.",
-    pictureLink: "https://example.com/buraco.jpg",
-    title: "Buraco na Rua",
-    date: DateTime(2024, 4, 28),
-  ),
+      description: "Buraco na rua principal.",
+      pictureLink: "https://example.com/buraco.jpg",
+      title: "Buraco na Rua",
+      date: DateTime(2024, 4, 28),
+      cep: 12578630,
+      num: 68),
   // Objeto 2
   Claim(
     lat: -22.9068,
