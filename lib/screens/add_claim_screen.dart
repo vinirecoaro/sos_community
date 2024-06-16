@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sos_community/components/input_field.dart';
 import 'package:sos_community/components/input_field_large.dart';
 import 'package:sos_community/components/photo_upload_container.dart';
 import 'package:sos_community/models/claim.dart';
+import 'package:sos_community/providers/claim_provider.dart';
 import 'package:sos_community/service/location_service.dart';
 
 class AddClaimScreen extends StatefulWidget {
@@ -21,24 +23,26 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
   final TextEditingController latController = TextEditingController();
   final TextEditingController lonController = TextEditingController();
   bool buttonEnabled = false;
+  bool fetchingLocation = true;
 
   @override
   Widget build(BuildContext context) {
     bool view;
-    final Claim claim = ModalRoute.of(context)!.settings.arguments as Claim;
+    final Claim editClaim = ModalRoute.of(context)!.settings.arguments as Claim;
+    final claimProvider = context.watch<ClaimProvider>();
 
-    view = claim.edit;
+    view = editClaim.edit;
 
     if (view) {
-      titleController.text = claim.title;
-      descriptionController.text = claim.description;
-      if (claim.lat == null) {
+      titleController.text = editClaim.title;
+      descriptionController.text = editClaim.description;
+      if (editClaim.lat == null) {
         isChecked = false;
-        cepController.text = claim.cep.toString();
-        numController.text = claim.num.toString();
+        cepController.text = editClaim.cep.toString();
+        numController.text = editClaim.num.toString();
       } else {
-        latController.text = claim.lat.toString();
-        lonController.text = claim.lon.toString();
+        latController.text = editClaim.lat.toString();
+        lonController.text = editClaim.lon.toString();
       }
     }
 
@@ -47,9 +51,8 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
         LocationService.determinePosition().then((value) {
           latController.text = value.latitude.toString();
           lonController.text = value.longitude.toString();
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Buscando localização")));
           setState(() {
+            fetchingLocation = false;
             buttonEnabled = true;
           });
         });
@@ -58,6 +61,7 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
 
     if (!isChecked) {
       setState(() {
+        fetchingLocation = false;
         buttonEnabled = true;
       });
     }
@@ -97,6 +101,15 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                         const Text("Usar minha localização")
                       ],
                     ),
+                    if (fetchingLocation)
+                      const Column(
+                        children: [
+                          Text("Buscando localização"),
+                          SizedBox(
+                            height: 10,
+                          )
+                        ],
+                      ),
                     if (!isChecked)
                       Column(
                         children: [
@@ -120,7 +133,19 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                                       const SnackBar(
                                           content: Text(
                                               "Preencher todos os campos")));
-                                } else {}
+                                } else {
+                                  claimProvider.insert(
+                                    Claim(
+                                        lat: double.parse(
+                                            latController.text.toString()),
+                                        lon: double.parse(
+                                            lonController.text.toString()),
+                                        description: descriptionController.text,
+                                        title: titleController.text,
+                                        date: DateTime.now()),
+                                  );
+                                  Navigator.pop(context);
+                                }
                               } else {
                                 if (titleController.text.isEmpty ||
                                     descriptionController.text.isEmpty ||
@@ -130,7 +155,19 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                                       const SnackBar(
                                           content: Text(
                                               "Preencher todos os campos")));
-                                } else {}
+                                } else {
+                                  claimProvider.insert(
+                                    Claim(
+                                        cep: int.parse(
+                                            cepController.text.toString()),
+                                        num: int.parse(
+                                            numController.text.toString()),
+                                        description: descriptionController.text,
+                                        title: titleController.text,
+                                        date: DateTime.now()),
+                                  );
+                                  Navigator.pop(context);
+                                }
                               }
                             }
                           : null,

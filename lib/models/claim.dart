@@ -1,8 +1,9 @@
 class Claim {
+  String? id;
   double? lat;
   double? lon;
   String description;
-  String pictureLink;
+  List<String>? picturesPath;
   String title;
   DateTime date;
   String status;
@@ -11,10 +12,11 @@ class Claim {
   int? num;
 
   Claim({
+    this.id,
     this.lat,
     this.lon,
     required this.description,
-    required this.pictureLink,
+    this.picturesPath,
     required this.title,
     required this.date,
     this.status = "Em análise",
@@ -22,4 +24,20 @@ class Claim {
     this.cep,
     this.num,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'lat': lat,
+      'lon': lon,
+      'description': description,
+      'picturesPath': picturesPath,
+      'title': title,
+      'date': date.toIso8601String(), // Converter DateTime para String
+      'status': status,
+      'edit': edit,
+      'cep': cep,
+      'num': num,
+    };
+  }
 }

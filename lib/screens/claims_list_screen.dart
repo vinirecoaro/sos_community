@@ -79,7 +79,7 @@ class _ClaimsListScreenState extends State<ClaimsListScreen> {
                   lat: 0,
                   lon: 0,
                   description: "",
-                  pictureLink: "",
+                  picturesPath: [],
                   title: "",
                   date: DateTime(2024)));
         },

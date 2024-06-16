@@ -7,10 +7,16 @@ class ClaimProvider extends ChangeNotifier {
   List<Claim> claimList = [];
 
   void insert(Claim claim) {
-    var future = ref.set(claim);
+    var newRef = ref.push();
+    var id = newRef.key;
+    var claimJson = claim.toJson();
+    var future = newRef.set(claimJson);
     future.then((value) {
+      claim.id = id;
       claimList.add(claim);
       notifyListeners();
     });
   }
+
+  void delete(Claim claim) {}
 }
