@@ -71,7 +71,11 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
           title: const Text('Adicionar Reclamação'),
           actions: [
             if (view)
-              IconButton(onPressed: () {}, icon: const Icon(Icons.delete))
+              IconButton(
+                  onPressed: () {
+                    showAlertDialog(context, claimProvider, editClaim);
+                  },
+                  icon: const Icon(Icons.delete))
           ],
         ),
         body: SingleChildScrollView(
@@ -224,5 +228,35 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
             ],
           ),
         ));
+  }
+
+  void showAlertDialog(
+      BuildContext context, ClaimProvider claimProvider, Claim claim) {
+    // Button configuration
+    Widget okButton = TextButton(
+      child: const Text("Apagar"),
+      onPressed: () {
+        claimProvider.delete(claim);
+        Navigator.of(context).pop(); // Close dialog
+        Navigator.pop(context);
+      },
+    );
+
+    //  AlertDialog configuration
+    AlertDialog alert = AlertDialog(
+      title: const Text("Excluir reclamação"),
+      content: const Text("Prosseguir com a exclusão dessa reclamação?"),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

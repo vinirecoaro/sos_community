@@ -18,5 +18,11 @@ class ClaimProvider extends ChangeNotifier {
     });
   }
 
-  void delete(Claim claim) {}
+  void delete(Claim claim) {
+    var future = ref.child(claim.id!).remove();
+    future.then((value) {
+      claimList.removeWhere((element) => element.id == claim.id);
+      notifyListeners();
+    });
+  }
 }
