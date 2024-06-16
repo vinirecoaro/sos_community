@@ -40,4 +40,22 @@ class Claim {
       'num': num,
     };
   }
+
+  factory Claim.fromJson(Map<String, dynamic> json) {
+    return Claim(
+      id: json['id'],
+      lat: json['lat'],
+      lon: json['lon'],
+      description: json['description'],
+      picturesPath: json['picturesPath'] != null
+          ? List<String>.from(json['picturesPath'])
+          : null,
+      title: json['title'],
+      date: DateTime.parse(json['date']),
+      status: json['status'],
+      edit: json['edit'],
+      cep: json['cep'],
+      num: json['num'],
+    );
+  }
 }
