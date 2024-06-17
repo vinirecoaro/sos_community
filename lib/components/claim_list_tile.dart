@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sos_community/models/claim.dart';
+import 'package:sos_community/routes.dart';
 
 class ClaimListTile extends StatelessWidget {
   const ClaimListTile(this.claim, {super.key});
@@ -13,7 +14,7 @@ class ClaimListTile extends StatelessWidget {
     return ListTile(
       onTap: () {
         claim.edit = true;
-        Navigator.pushNamed(context, 'add_claim_screen', arguments: claim);
+        Navigator.pushNamed(context, Routes.ADD_EDIT_CLAIM, arguments: claim);
       },
       title: Text(claim.title),
       subtitle: Text(formatter.format(claim.date)),

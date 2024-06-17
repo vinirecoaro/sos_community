@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sos_community/firebase_options.dart';
 import 'package:sos_community/providers/claim_provider.dart';
+import 'package:sos_community/routes.dart';
 import 'package:sos_community/screens/add_claim_screen.dart';
 import 'package:sos_community/screens/claims_list_screen.dart';
 
@@ -34,8 +35,10 @@ class MyApp extends StatelessWidget {
               seedColor: const Color.fromARGB(255, 11, 109, 60)),
           useMaterial3: true,
         ),
-        home: const ClaimsListScreen(),
-        routes: {"add_claim_screen": (context) => const AddClaimScreen()},
+        routes: {
+          Routes.CLAIM_LIST: (context) => const ClaimsListScreen(),
+          Routes.ADD_EDIT_CLAIM: (context) => const AddClaimScreen()
+        },
       ),
     );
   }

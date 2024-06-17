@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sos_community/components/claims_list.dart';
 import 'package:sos_community/models/claim.dart';
 import 'package:sos_community/providers/claim_provider.dart';
+import 'package:sos_community/routes.dart';
 
 class ClaimsListScreen extends StatefulWidget {
   const ClaimsListScreen({super.key});
@@ -27,7 +28,7 @@ class _ClaimsListScreenState extends State<ClaimsListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, "add_claim_screen",
+          Navigator.pushNamed(context, Routes.ADD_EDIT_CLAIM,
               arguments: Claim(
                   lat: 0,
                   lon: 0,
