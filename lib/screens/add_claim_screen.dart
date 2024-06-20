@@ -6,6 +6,8 @@ import 'package:sos_community/components/photo_upload_container.dart';
 import 'package:sos_community/models/claim.dart';
 import 'package:sos_community/providers/claim_provider.dart';
 import 'package:sos_community/service/location_service.dart';
+import 'package:sos_community/util/keys.dart';
+import 'package:weather_data_pk/weather_data_pk.dart';
 
 class AddClaimScreen extends StatefulWidget {
   const AddClaimScreen({super.key});
@@ -15,54 +17,83 @@ class AddClaimScreen extends StatefulWidget {
 }
 
 class _AddClaimScreenState extends State<AddClaimScreen> {
-  bool isChecked = true;
+  bool getLocation = true;
+  bool fetchingLocationText = true;
+  bool sendButtonEnabled = false;
+  bool getWeather = false;
+  double? weatherTemp;
+  String? weatherDescription;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController cepController = TextEditingController();
   final TextEditingController numController = TextEditingController();
   final TextEditingController latController = TextEditingController();
   final TextEditingController lonController = TextEditingController();
-  bool buttonEnabled = false;
-  bool fetchingLocation = true;
+  final TextEditingController weatherTempController = TextEditingController();
+  final TextEditingController weatherDescriptionController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    bool view;
+    bool edit;
     final Claim editClaim = ModalRoute.of(context)!.settings.arguments as Claim;
     final claimProvider = context.watch<ClaimProvider>();
 
-    view = editClaim.edit;
+    edit = editClaim.edit;
 
-    if (view) {
+    if (edit) {
       titleController.text = editClaim.title;
       descriptionController.text = editClaim.description;
       if (editClaim.lat == null) {
-        isChecked = false;
+        getLocation = false;
         cepController.text = editClaim.cep.toString();
         numController.text = editClaim.num.toString();
       } else {
         latController.text = editClaim.lat.toString();
         lonController.text = editClaim.lon.toString();
       }
+      if (editClaim.weatherTemp != null &&
+          editClaim.weatherDescription != null) {
+        weatherTempController.text =
+            "${editClaim.weatherTemp!.toStringAsFixed(1)}°C";
+        weatherDescriptionController.text =
+            editClaim.weatherDescription.toString();
+        getWeather = true;
+      }
     }
 
-    if (!view && isChecked) {
+    if (!edit && getLocation) {
       if (latController.text.isEmpty || lonController.text.isEmpty) {
         LocationService.determinePosition().then((value) {
           latController.text = value.latitude.toString();
           lonController.text = value.longitude.toString();
           setState(() {
-            fetchingLocation = false;
-            buttonEnabled = true;
+            fetchingLocationText = false;
+            sendButtonEnabled = true;
           });
         });
       }
     }
 
-    if (!isChecked) {
+    if (!getLocation) {
       setState(() {
-        fetchingLocation = false;
-        buttonEnabled = true;
+        fetchingLocationText = false;
+        sendButtonEnabled = true;
+      });
+    }
+
+    if (getWeather && weatherTemp == null) {
+      sendButtonEnabled = false;
+      var lat = double.parse(latController.text.toString());
+      var lon = double.parse(lonController.text.toString());
+      WeatherDataService.getWeather(
+        Keys.API_KEY,
+        lat,
+        lon,
+      ).then((value) {
+        weatherTemp = value.main!.temp! - 273;
+        weatherDescription = value.weather![0].description;
+        sendButtonEnabled = true;
       });
     }
 
@@ -70,7 +101,7 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
         appBar: AppBar(
           title: const Text('Adicionar Reclamação'),
           actions: [
-            if (view)
+            if (edit)
               IconButton(
                   onPressed: () {
                     showAlertDialog(context, claimProvider, editClaim);
@@ -81,7 +112,7 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              if (!view)
+              if (!edit)
                 Column(
                   children: [
                     InputField(
@@ -96,16 +127,39 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                     Row(
                       children: [
                         Checkbox(
-                            value: isChecked,
+                            value: getLocation,
                             onChanged: (value) {
                               setState(() {
-                                isChecked = value!;
+                                getLocation = value!;
                               });
                             }),
                         const Text("Usar minha localização")
                       ],
                     ),
-                    if (fetchingLocation)
+                    Row(
+                      children: [
+                        Checkbox(
+                            value: getWeather,
+                            onChanged: (value) {
+                              setState(() {
+                                if (getLocation &&
+                                    !getWeather &&
+                                    sendButtonEnabled) {
+                                  getWeather = value!;
+                                } else if (!getLocation && !getWeather) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              "Necessário usar localização atual")));
+                                } else if (getWeather) {
+                                  getWeather = value!;
+                                }
+                              });
+                            }),
+                        const Text("Incluir informações do clima no local")
+                      ],
+                    ),
+                    if (fetchingLocationText)
                       const Column(
                         children: [
                           Text("Buscando localização"),
@@ -114,7 +168,7 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                           )
                         ],
                       ),
-                    if (!isChecked)
+                    if (!getLocation)
                       Column(
                         children: [
                           InputField(
@@ -128,9 +182,9 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                         ],
                       ),
                     FilledButton(
-                      onPressed: buttonEnabled
+                      onPressed: sendButtonEnabled
                           ? () {
-                              if (isChecked) {
+                              if (getLocation && !getWeather) {
                                 if (titleController.text.isEmpty ||
                                     descriptionController.text.isEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -150,7 +204,29 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                                   );
                                   Navigator.pop(context);
                                 }
-                              } else {
+                              } else if (getLocation && getWeather) {
+                                if (titleController.text.isEmpty ||
+                                    descriptionController.text.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              "Preencher todos os campos")));
+                                } else {
+                                  claimProvider.insert(
+                                    Claim(
+                                        lat: double.parse(
+                                            latController.text.toString()),
+                                        lon: double.parse(
+                                            lonController.text.toString()),
+                                        description: descriptionController.text,
+                                        title: titleController.text,
+                                        date: DateTime.now(),
+                                        weatherTemp: weatherTemp,
+                                        weatherDescription: weatherDescription),
+                                  );
+                                  Navigator.pop(context);
+                                }
+                              } else if (!getLocation && getWeather) {
                                 if (titleController.text.isEmpty ||
                                     descriptionController.text.isEmpty ||
                                     cepController.text.isEmpty ||
@@ -168,7 +244,32 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                                             numController.text.toString()),
                                         description: descriptionController.text,
                                         title: titleController.text,
-                                        date: DateTime.now()),
+                                        date: DateTime.now(),
+                                        weatherTemp: weatherTemp,
+                                        weatherDescription: weatherDescription),
+                                  );
+                                  Navigator.pop(context);
+                                }
+                              } else {
+                                if (titleController.text.isEmpty ||
+                                    descriptionController.text.isEmpty ||
+                                    cepController.text.isEmpty ||
+                                    numController.text.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              "Preencher todos os campos")));
+                                } else {
+                                  claimProvider.insert(
+                                    Claim(
+                                      cep: int.parse(
+                                          cepController.text.toString()),
+                                      num: int.parse(
+                                          numController.text.toString()),
+                                      description: descriptionController.text,
+                                      title: titleController.text,
+                                      date: DateTime.now(),
+                                    ),
                                   );
                                   Navigator.pop(context);
                                 }
@@ -179,7 +280,7 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                     ),
                   ],
                 ),
-              if (view)
+              if (edit)
                 Column(
                   children: [
                     InputField(
@@ -193,7 +294,7 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                       controller: descriptionController,
                     ),
                     const PhotoUploadContainer(),
-                    if (!isChecked)
+                    if (!getLocation)
                       Column(
                         children: [
                           InputField(
@@ -208,7 +309,7 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                           ),
                         ],
                       ),
-                    if (isChecked)
+                    if (getLocation)
                       Column(
                         children: [
                           InputField(
@@ -222,7 +323,22 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                             controller: lonController,
                           ),
                         ],
-                      )
+                      ),
+                    if (getWeather)
+                      Column(
+                        children: [
+                          InputField(
+                            label: "Temperatura",
+                            enabled: false,
+                            controller: weatherTempController,
+                          ),
+                          InputField(
+                            label: "Clima",
+                            enabled: false,
+                            controller: weatherDescriptionController,
+                          ),
+                        ],
+                      ),
                   ],
                 )
             ],

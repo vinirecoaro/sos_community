@@ -44,3 +44,5 @@ app.*.map.json
 
 # Specific files
 firebase_options.dart
+
+keys.dart

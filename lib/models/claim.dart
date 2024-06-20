@@ -10,6 +10,8 @@ class Claim {
   bool edit;
   int? cep;
   int? num;
+  double? weatherTemp;
+  String? weatherDescription;
 
   Claim({
     this.id,
@@ -23,6 +25,8 @@ class Claim {
     this.edit = false,
     this.cep,
     this.num,
+    this.weatherTemp,
+    this.weatherDescription,
   });
 
   Map<String, dynamic> toJson() {
@@ -38,6 +42,8 @@ class Claim {
       'edit': edit,
       'cep': cep,
       'num': num,
+      'weatherTemp': weatherTemp,
+      'weatherDescription': weatherDescription,
     };
   }
 
@@ -56,6 +62,8 @@ class Claim {
       edit: json['edit'],
       cep: json['cep'],
       num: json['num'],
+      weatherTemp: json['weatherTemp'],
+      weatherDescription: json['weatherDescription'],
     );
   }
 }
