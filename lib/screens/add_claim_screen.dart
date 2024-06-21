@@ -83,7 +83,9 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
     }
 
     if (getWeather && weatherTemp == null) {
-      sendButtonEnabled = false;
+      setState(() {
+        sendButtonEnabled = false;
+      });
       var lat = double.parse(latController.text.toString());
       var lon = double.parse(lonController.text.toString());
       WeatherDataService.getWeather(
@@ -93,7 +95,9 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
       ).then((value) {
         weatherTemp = value.main!.temp! - 273;
         weatherDescription = value.weather![0].description;
-        sendButtonEnabled = true;
+        setState(() {
+          sendButtonEnabled = true;
+        });
       });
     }
 

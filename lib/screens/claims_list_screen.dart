@@ -15,17 +15,22 @@ class ClaimsListScreen extends StatefulWidget {
 class _ClaimsListScreenState extends State<ClaimsListScreen> {
   @override
   Widget build(BuildContext context) {
-    final claimProvider = context.watch<ClaimProvider>();
-    final List<Claim> claimList = claimProvider.claimList;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Lista de Reclamações"),
         backgroundColor: const Color.fromARGB(255, 11, 109, 60),
       ),
-      body: Column(
-        children: [Expanded(child: ClaimsList(claimList))],
-      ),
+      body: Consumer<ClaimProvider>(builder: (context, claimProvider, child) {
+        if (claimProvider.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (claimProvider.claimList.isEmpty) {
+          return const Center(child: Text('Nenhuma reclamação registrada'));
+        } else {
+          return Column(
+            children: [Expanded(child: ClaimsList(claimProvider.claimList))],
+          );
+        }
+      }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, Routes.ADD_EDIT_CLAIM,

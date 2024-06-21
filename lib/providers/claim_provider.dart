@@ -6,6 +6,7 @@ class ClaimProvider extends ChangeNotifier {
   var ref = FirebaseDatabase.instance.ref("claims");
   List<Claim> claimList = [];
   bool _isInitialized = false;
+  bool isLoading = false;
 
   ClaimProvider() {
     if (!_isInitialized) {
@@ -15,16 +16,25 @@ class ClaimProvider extends ChangeNotifier {
   }
 
   void getList() {
-    var future = ref.get();
-    future.then((value) {
-      for (var item in value.children) {
-        Map<String, dynamic> values =
-            Map<String, dynamic>.from(item.value as Map);
-        var claim = Claim.fromJson(values);
-        claimList.add(claim);
-      }
+    isLoading = true;
+    notifyListeners();
+
+    try {
+      var future = ref.get();
+      future.then((value) {
+        for (var item in value.children) {
+          Map<String, dynamic> values =
+              Map<String, dynamic>.from(item.value as Map);
+          var claim = Claim.fromJson(values);
+          claimList.add(claim);
+        }
+        isLoading = false;
+        notifyListeners();
+      });
+    } catch (error) {
+      isLoading = false;
       notifyListeners();
-    });
+    }
   }
 
   void insert(Claim claim) {
