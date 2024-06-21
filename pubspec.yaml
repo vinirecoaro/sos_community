@@ -26,6 +26,7 @@ dependencies:
     git:
       url: https://github.com/vinirecoaro/weather_data_pk.git
       ref: master
+  firebase_storage: ^12.0.1
 
 
 dev_dependencies:

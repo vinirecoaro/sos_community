@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sos_community/components/input_field.dart';
@@ -32,12 +34,19 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
   final TextEditingController weatherTempController = TextEditingController();
   final TextEditingController weatherDescriptionController =
       TextEditingController();
+  List<String> _capturedImagesPath = [];
 
   @override
   Widget build(BuildContext context) {
     bool edit;
     final Claim editClaim = ModalRoute.of(context)!.settings.arguments as Claim;
     final claimProvider = context.watch<ClaimProvider>();
+
+    void _updateImages(List<String> images) {
+      setState(() {
+        _capturedImagesPath = images;
+      });
+    }
 
     edit = editClaim.edit;
 
@@ -127,7 +136,9 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                       label: "Descrição",
                       controller: descriptionController,
                     ),
-                    const PhotoUploadContainer(),
+                    PhotoUploadContainer(
+                      onImagesChanged: _updateImages,
+                    ),
                     Row(
                       children: [
                         Checkbox(
@@ -196,17 +207,34 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                                           content: Text(
                                               "Preencher todos os campos")));
                                 } else {
-                                  claimProvider.insert(
-                                    Claim(
+                                  if (_capturedImagesPath.isEmpty) {
+                                    claimProvider.insert(
+                                      Claim(
                                         lat: double.parse(
                                             latController.text.toString()),
                                         lon: double.parse(
                                             lonController.text.toString()),
                                         description: descriptionController.text,
                                         title: titleController.text,
-                                        date: DateTime.now()),
-                                  );
-                                  Navigator.pop(context);
+                                        date: DateTime.now(),
+                                      ),
+                                    );
+                                    Navigator.pop(context);
+                                  } else {
+                                    claimProvider.insert(
+                                      Claim(
+                                          lat: double.parse(
+                                              latController.text.toString()),
+                                          lon: double.parse(
+                                              lonController.text.toString()),
+                                          description:
+                                              descriptionController.text,
+                                          title: titleController.text,
+                                          date: DateTime.now(),
+                                          picturesPath: _capturedImagesPath),
+                                    );
+                                    Navigator.pop(context);
+                                  }
                                 }
                               } else if (getLocation && getWeather) {
                                 if (titleController.text.isEmpty ||
@@ -297,7 +325,9 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                       enabled: false,
                       controller: descriptionController,
                     ),
-                    const PhotoUploadContainer(),
+                    PhotoUploadContainer(
+                      onImagesChanged: _updateImages,
+                    ),
                     if (!getLocation)
                       Column(
                         children: [

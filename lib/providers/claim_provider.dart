@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sos_community/models/claim.dart';
 
 class ClaimProvider extends ChangeNotifier {
-  var ref = FirebaseDatabase.instance.ref("claims");
+  var databaseRef = FirebaseDatabase.instance.ref("claims");
+  var storageRef = FirebaseStorage.instance;
   List<Claim> claimList = [];
   bool _isInitialized = false;
   bool isLoading = false;
+  List<String> imagesUrl = [];
 
   ClaimProvider() {
     if (!_isInitialized) {
@@ -20,7 +25,7 @@ class ClaimProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      var future = ref.get();
+      var future = databaseRef.get();
       future.then((value) {
         for (var item in value.children) {
           Map<String, dynamic> values =
@@ -38,22 +43,39 @@ class ClaimProvider extends ChangeNotifier {
   }
 
   void insert(Claim claim) {
-    var newRef = ref.push();
+    var newRef = databaseRef.push();
     var id = newRef.key;
     claim.id = id;
-    var claimJson = claim.toJson();
-    var future = newRef.set(claimJson);
-    future.then((value) {
-      claimList.add(claim);
-      notifyListeners();
-    });
+
+    if (claim.picturesPath != null) {
+      var urlImages = saveImages(claim.picturesPath!, id.toString());
+      urlImages.then((value) {
+        claim.picturesPath = imagesUrl;
+        var claimJson = claim.toJson();
+        var future = newRef.set(claimJson);
+        future.then((value) {
+          claimList.add(claim);
+          notifyListeners();
+        });
+      });
+    }
   }
 
   void delete(Claim claim) {
-    var future = ref.child(claim.id!).remove();
+    var future = databaseRef.child(claim.id!).remove();
     future.then((value) {
       claimList.removeWhere((element) => element.id == claim.id);
       notifyListeners();
     });
+  }
+
+  Future<void> saveImages(List<String> imagesPath, String id) async {
+    for (var i = 0; i < imagesPath.length; i++) {
+      var ref = storageRef.ref().child(id).child("picture$i");
+      var imageFile = File(imagesPath[i]);
+      await ref.putFile(imageFile);
+      var url = await ref.getDownloadURL();
+      imagesUrl.add(url);
+    }
   }
 }

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class PhotoUploadContainer extends StatefulWidget {
-  const PhotoUploadContainer({super.key});
+  final Function(List<String>) onImagesChanged; // Adicione isso
+
+  const PhotoUploadContainer({super.key, required this.onImagesChanged});
 
   @override
   State<PhotoUploadContainer> createState() => _PhotoUploadContainerState();
@@ -11,6 +13,7 @@ class PhotoUploadContainer extends StatefulWidget {
 
 class _PhotoUploadContainerState extends State<PhotoUploadContainer> {
   final List<File?> _images = [];
+  final List<String> _imagesPath = [];
 
   Future<void> _getImage(ImageSource source) async {
     final picker = ImagePicker();
@@ -20,6 +23,8 @@ class _PhotoUploadContainerState extends State<PhotoUploadContainer> {
       setState(() {
         if (_images.length < 3) {
           _images.add(File(pickedFile.path));
+          _imagesPath.add(pickedFile.path);
+          widget.onImagesChanged(_imagesPath);
         } else {
           // You can display a toast or snackbar here indicating maximum limit reached
         }
@@ -30,6 +35,8 @@ class _PhotoUploadContainerState extends State<PhotoUploadContainer> {
   void _removeImage(int index) {
     setState(() {
       _images.removeAt(index);
+      _imagesPath.removeAt(index);
+      widget.onImagesChanged(_imagesPath);
     });
   }
 
