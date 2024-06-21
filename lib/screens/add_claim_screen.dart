@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sos_community/components/input_field.dart';
 import 'package:sos_community/components/input_field_large.dart';
+import 'package:sos_community/components/photo_container.dart';
 import 'package:sos_community/components/photo_upload_container.dart';
 import 'package:sos_community/models/claim.dart';
 import 'package:sos_community/providers/claim_provider.dart';
@@ -42,7 +41,7 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
     final Claim editClaim = ModalRoute.of(context)!.settings.arguments as Claim;
     final claimProvider = context.watch<ClaimProvider>();
 
-    void _updateImages(List<String> images) {
+    void updateImages(List<String> images) {
       setState(() {
         _capturedImagesPath = images;
       });
@@ -137,7 +136,7 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                       controller: descriptionController,
                     ),
                     PhotoUploadContainer(
-                      onImagesChanged: _updateImages,
+                      onImagesChanged: updateImages,
                     ),
                     Row(
                       children: [
@@ -325,9 +324,8 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                       enabled: false,
                       controller: descriptionController,
                     ),
-                    PhotoUploadContainer(
-                      onImagesChanged: _updateImages,
-                    ),
+                    if (editClaim.picturesPath != null)
+                      PhotoContainer(imagesPath: editClaim.picturesPath!),
                     if (!getLocation)
                       Column(
                         children: [
