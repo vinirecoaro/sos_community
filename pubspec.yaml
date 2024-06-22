@@ -27,6 +27,7 @@ dependencies:
       url: https://github.com/vinirecoaro/weather_data_pk.git
       ref: master
   firebase_storage: ^12.0.1
+  mockito: ^5.4.4
 
 
 dev_dependencies:
@@ -34,6 +35,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^3.0.0
   flutter_launcher_icons: "^0.13.1"
+  test: ^1.24.9
 
 
 flutter:

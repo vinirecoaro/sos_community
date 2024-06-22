@@ -34,6 +34,7 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
   final TextEditingController weatherDescriptionController =
       TextEditingController();
   List<String> _capturedImagesPath = [];
+  String screenTitle = "Adicionar Reclamação";
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +51,7 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
     edit = editClaim.edit;
 
     if (edit) {
+      screenTitle = "Reclamação";
       titleController.text = editClaim.title;
       descriptionController.text = editClaim.description;
       if (editClaim.lat == null) {
@@ -111,7 +113,7 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Adicionar Reclamação'),
+          title: Text(screenTitle),
           actions: [
             if (edit)
               IconButton(
