@@ -64,8 +64,10 @@ class ClaimProvider extends ChangeNotifier {
   void delete(Claim claim) {
     var future = databaseRef.child(claim.id!).remove();
     future.then((value) {
-      claimList.removeWhere((element) => element.id == claim.id);
-      notifyListeners();
+      storageRef.ref().child(claim.id!).delete().then((value) {
+        claimList.removeWhere((element) => element.id == claim.id);
+        notifyListeners();
+      });
     });
   }
 
