@@ -58,17 +58,38 @@ class ClaimProvider extends ChangeNotifier {
           notifyListeners();
         });
       });
+    } else {
+      var claimJson = claim.toJson();
+      var future = newRef.set(claimJson);
+      future.then((value) {
+        claimList.add(claim);
+        notifyListeners();
+      });
     }
   }
 
-  void delete(Claim claim) {
+  void delete(Claim claim) async {
     var future = databaseRef.child(claim.id!).remove();
-    future.then((value) {
-      storageRef.ref().child(claim.id!).delete().then((value) {
+    if (claim.picturesPath != null) {
+      future.then((value) {
+        for (var i = 0; i < claim.picturesPath!.length; i++) {
+          storageRef
+              .ref()
+              .child(claim.id!)
+              .child("picture$i")
+              .delete()
+              .then((value) {
+            claimList.removeWhere((element) => element.id == claim.id);
+            notifyListeners();
+          });
+        }
+      });
+    } else {
+      future.then((value) {
         claimList.removeWhere((element) => element.id == claim.id);
         notifyListeners();
       });
-    });
+    }
   }
 
   Future<void> saveImages(List<String> imagesPath, String id) async {
