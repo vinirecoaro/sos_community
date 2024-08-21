@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sos_community/components/custom_app_bar_actions.dart';
 import 'package:sos_community/components/input_field.dart';
 import 'package:sos_community/components/input_field_large.dart';
 import 'package:sos_community/components/photo_container.dart';
@@ -112,15 +113,18 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
     }
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(screenTitle),
+        appBar: CustomAppBarActions(
+          title: screenTitle,
           actions: [
             if (edit)
               IconButton(
                   onPressed: () {
                     showAlertDialog(context, claimProvider, editClaim);
                   },
-                  icon: const Icon(Icons.delete))
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ))
           ],
         ),
         body: SingleChildScrollView(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sos_community/components/claims_list.dart';
+import 'package:sos_community/components/custom_app_bar.dart';
 import 'package:sos_community/models/claim.dart';
 import 'package:sos_community/providers/claim_provider.dart';
 import 'package:sos_community/routes.dart';
@@ -16,10 +17,11 @@ class _ClaimsListScreenState extends State<ClaimsListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Lista de Reclamações"),
-        backgroundColor: const Color.fromARGB(255, 11, 109, 60),
-      ),
+      appBar: const CustomAppBar("Lista de Reclamações"),
+      // appBar: AppBar(
+      //   title: const Text("Lista de Reclamações"),
+      //   backgroundColor: const Color.fromARGB(255, 11, 109, 60),
+      // ),
       body: Consumer<ClaimProvider>(builder: (context, claimProvider, child) {
         if (claimProvider.isLoading) {
           return const Center(child: CircularProgressIndicator());
