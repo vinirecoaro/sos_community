@@ -28,6 +28,7 @@ dependencies:
       ref: master
   firebase_storage: ^12.0.1
   mockito: ^5.4.4
+  flutter_svg: ^2.0.10+1
 
 
 dev_dependencies:
@@ -41,6 +42,9 @@ dev_dependencies:
 flutter:
 
   uses-material-design: true
+
+  assets:
+    - assets/img/
 
 flutter_launcher_icons:
   android: "launcher_icon"

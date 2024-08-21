@@ -6,6 +6,8 @@ import 'package:sos_community/providers/claim_provider.dart';
 import 'package:sos_community/routes.dart';
 import 'package:sos_community/screens/add_claim_screen.dart';
 import 'package:sos_community/screens/claims_list_screen.dart';
+import 'package:sos_community/screens/login_screen.dart';
+import 'package:sos_community/screens/sign_up_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +38,8 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         routes: {
+          Routes.LOGIN: (context) => const LoginScreen(),
+          Routes.SIGN_UP: (context) => const SignUpScreen(),
           Routes.CLAIM_LIST: (context) => const ClaimsListScreen(),
           Routes.ADD_EDIT_CLAIM: (context) => const AddClaimScreen()
         },
