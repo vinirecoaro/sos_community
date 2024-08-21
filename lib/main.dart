@@ -7,6 +7,7 @@ import 'package:sos_community/routes.dart';
 import 'package:sos_community/screens/add_claim_screen.dart';
 import 'package:sos_community/screens/claims_list_screen.dart';
 import 'package:sos_community/screens/login_screen.dart';
+import 'package:sos_community/screens/profile_screen.dart';
 import 'package:sos_community/screens/sign_up_screen.dart';
 
 void main() async {
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         routes: {
           Routes.LOGIN: (context) => const LoginScreen(),
           Routes.SIGN_UP: (context) => const SignUpScreen(),
+          Routes.PROFILE: (context) => const ProfileScreen(),
           Routes.CLAIM_LIST: (context) => const ClaimsListScreen(),
           Routes.ADD_EDIT_CLAIM: (context) => const AddClaimScreen()
         },

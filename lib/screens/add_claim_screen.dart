@@ -25,6 +25,7 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
   bool getWeather = false;
   double? weatherTemp;
   String? weatherDescription;
+  final TextEditingController statusController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController cepController = TextEditingController();
@@ -53,6 +54,7 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
 
     if (edit) {
       screenTitle = "Reclamação";
+      statusController.text = editClaim.status;
       titleController.text = editClaim.title;
       descriptionController.text = editClaim.description;
       if (editClaim.lat == null) {
@@ -321,6 +323,11 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                 Column(
                   children: [
                     InputField(
+                      label: "Status",
+                      enabled: false,
+                      controller: statusController,
+                    ),
+                    InputField(
                       label: "Título",
                       enabled: false,
                       controller: titleController,
@@ -381,7 +388,13 @@ class _AddClaimScreenState extends State<AddClaimScreen> {
                 )
             ],
           ),
-        ));
+        ),
+        floatingActionButton: edit
+            ? FloatingActionButton(
+                onPressed: () {},
+                child: const Icon(Icons.chat),
+              )
+            : null);
   }
 
   void showAlertDialog(

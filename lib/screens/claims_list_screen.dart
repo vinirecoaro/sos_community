@@ -18,10 +18,39 @@ class _ClaimsListScreenState extends State<ClaimsListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar("Lista de Reclamações"),
-      // appBar: AppBar(
-      //   title: const Text("Lista de Reclamações"),
-      //   backgroundColor: const Color.fromARGB(255, 11, 109, 60),
-      // ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, Routes.PROFILE);
+              },
+              child: const UserAccountsDrawerHeader(
+                accountName: Text("Vinicius Recoaro"),
+                accountEmail: Text("vinirec@example.com"),
+                currentAccountPicture: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Text(
+                    "VR",
+                    style: TextStyle(fontSize: 24.0, color: Colors.blue),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 11, 109, 60),
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.exit_to_app),
+              title: const Text('Sair'),
+              onTap: () {
+                Navigator.pushReplacementNamed(context, Routes.LOGIN);
+              },
+            ),
+          ],
+        ),
+      ),
       body: Consumer<ClaimProvider>(builder: (context, claimProvider, child) {
         if (claimProvider.isLoading) {
           return const Center(child: CircularProgressIndicator());
